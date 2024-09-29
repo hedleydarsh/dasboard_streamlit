@@ -164,6 +164,25 @@ def plot_rent_by_city(df_filtered):
     )
     return fig_rent
 
+# Função para gerar o gráfico de pizza de proporção de animais
+def plot_animal_pie(df_filtered):
+    animal_proportion = df_filtered['animal'].value_counts().reset_index()
+    animal_proportion.columns = ['Permissão de Animais', 'Contagem']
+
+    fig_animal_pie = px.pie(
+        animal_proportion, names='Permissão de Animais', values='Contagem', 
+        title='Proporção de Casas que Aceitam Animais', 
+        color_discrete_sequence=px.colors.qualitative.Pastel,
+        labels={'Permissão de Animais': 'Aceita Animais?', 'Contagem': 'Contagem'},
+        width=200, height=400
+    )
+    fig_animal_pie.update_layout(
+        title_font=dict(size=18, color='#333333'), 
+        paper_bgcolor='rgba(245, 245, 245, 1)', 
+        margin=dict(l=0, r=0, t=50, b=0)
+    )
+    return fig_animal_pie
+
 # Função para gerar o gráfico de violino para a distribuição de valores
 def plot_rent_distribution(df_filtered):
    # Gráfico de Distribuição dos Valores Embutidos no Aluguel por Cidade
@@ -218,13 +237,16 @@ def main():
         with col2:
             st.plotly_chart(plot_price_by_rooms_city(df_filtered), use_container_width=True)
 
-        col2, col3 = st.columns(2)
+        col2, col3, col4 = st.columns(3)
         
         with col2:
             st.plotly_chart(plot_area_by_city(df_filtered), use_container_width=True)
 
         with col3:
             st.plotly_chart(plot_rent_by_city(df_filtered), use_container_width=True)
+        
+        with col4:
+            st.plotly_chart(plot_animal_pie(df_filtered), use_container_width=True)
             
         st.plotly_chart(plot_rent_distribution(df_filtered), use_container_width=True)
     else:
