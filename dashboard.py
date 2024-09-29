@@ -3,7 +3,11 @@ import pandas as pd
 import plotly.express as px
 
 # Configurar o layout da página
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title="Dashboard - Análise de Aluguel", 
+    page_icon=":house:",
+    layout="wide"
+)
 
 # Função para carregar dados com cache
 def load_data():
