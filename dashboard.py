@@ -109,7 +109,7 @@ def plot_price_by_rooms_city(df_filtered):
         color_discrete_sequence=px.colors.qualitative.Set2
     )
     fig_price_rooms_city.update_layout(
-        margin=dict(l=0, r=0, t=50, b=0), 
+        margin=dict(l=100, r=0, t=50, b=0), 
         plot_bgcolor='rgba(0,0,0,0)', 
         paper_bgcolor='rgba(245, 245, 245, 1)', 
         xaxis_title="Quantidade de Quartos", yaxis_title="Aluguel Médio (R$)", 
@@ -185,6 +185,10 @@ def plot_animal_pie(df_filtered):
 
 # Função para gerar o gráfico de violino para a distribuição de valores
 def plot_rent_distribution(df_filtered):
+    #retirar os outliers
+    df_filtered = df_without_outliers = remove_outliers(df_filtered, 'total (R$)')
+
+    
    # Gráfico de Distribuição dos Valores Embutidos no Aluguel por Cidade
     # Criar o gráfico de violin plot para mostrar a distribuição dos valores embutidos
     fig_rent_distribution = px.violin(
@@ -211,6 +215,25 @@ def plot_rent_distribution(df_filtered):
     )
     
     return fig_rent_distribution
+
+
+def remove_outliers(df, column):
+    # Calcular o 1º quartil (Q1) e o 3º quartil (Q3)
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    
+    # Calcular o IQR
+    IQR = Q3 - Q1
+    
+    # Definir os limites
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    # Filtrar o DataFrame, mantendo apenas os valores dentro dos limites
+    df_filtered = df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+    
+    return df_filtered
+
 
 # Função principal para renderizar o dashboard
 def main():
